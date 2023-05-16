@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="submit" onclick="pindah()">DATA FOTO</button>
+    <button type="submit" onclick="kembali()">KEMBALI</button>
+    <br><br><br><br><br><br>
+    <div id="img"></div>
+    <div id="tmpl" name="tmpl"></div>
+</body>
+</html>
+<script>
+    function pindah() {
+        window.location.href = "dfoto.html";
+    }
+    function kembali() {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("isLoggedInName");
+        window.location.href = "index.html";
+    }
+
+    window.addEventListener('DOMContentLoaded', (event)=>{
+            const datadiv = document.getElementById('tmpl');
+            
+            const d = "backend/output/dataform.txt";
+           
+            fetch(d)
+            .then(response => response.text())
+            .then(data=>{
+                datadiv.innerHTML = data;
+            })
+            .catch(error=>{
+                console.error(error);
+            });
+        });
+    
+
+    // async function tmpl() {
+    //     try {
+    //         const response = await fetch("http://localhost/", {
+    //                     method: "POST",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                     },
+    //                     body: JSON.stringify({
+    //                         action: "tampil"
+    //                     }),
+    
+    //         });
+    //         let getData = await response.json();
+    //     } catch (error) {
+    //         alert(error);
+    //     }
+    // }
+
+    // tmpl();
+
+    // const tbody = document.querySelector('#tmpl');
+    // let user= [];
+
+    // const load = async () =>{
+    //     try {
+    //         const url = await fetch("http://localhost/");
+    //         user = await url.json();
+    //         console.log(user);
+    //         load(user)
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+    //     const loaduser = (data) =>{
+    //         let no = 1;
+    //         const output = data.tamp((el) =>{
+    //             return "<tr><td> ${el.nik}</td></tr>";
+                
+    //         })
+    //     }
+    // }
+
+
+</script>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <h1 id="sitono">FORM siTONO</h1>
+        <h6>dijawab dengan jujur dan benar ya, jangan menyontek xixixi</h6>
+   </div>
+    <div class="isi">
+        <div class="luar">
+            <label for="makanan">APA MAKANAN KESUKAANMU ?</label>
+            <input class="input" type="text" name="makanan" id="makanan">
+        </div><br>
+        <div class="luar">
+            <label for="alasan">ALASAN KAMU MENGIDOLAKAN DIA?</label>
+            <input class="input" type="text" name="alasan" id="alasan">
+        </div><br>
+        <div class="luar">
+            <label for="sejak">SEJAK KAPAN KAMU MENGIDOLAKAN DIA?</label>
+            <input class="input" type="text" name="sejak" id="sejak">
+        </div><br>
+        <div class="luar">
+            <label for="cerita">CERITAKAN SECARA SINGKAT TENTANG DIRIMU</label>
+            <input class="input" type="text" name="cerita" id="cerita">
+        </div><br>
+        <div class="luar">
+            <label for="hobi">APA HOBIMU?</label>
+            <input class="input" type="text" name="hobi" id="hobi">
+        </div><br>
+        <div class="luar">
+            <label for="pacar">APAKAH KAMU MEMILIKI TEMAN HIDUP?</label>
+            <input class="input" type="text" name="pacar" id="pacar">
+        </div><br>
+        <div class="luar">
+            <label for="seseorang">APAKAH KAMU TAU AKU?</label>
+            <input class="input" type="text" name="seseorang" id="seseorang">
+        </div><br>
+        <div class="luar">
+            <label for="apakah">APAKAH KAMU TAHU ADA YANG LEBIH MENCINTAIMU?</label>
+            <input type="text" name="apakah" id="apakah">
+        </div><br>
+    </div>
+    <div class="footer">
+        <button type="submit" onclick="isiCatatan(event)">NEXT</button>
+        <br><br><br>
+        <div class="text">
+            <p id="copy">COPYRIGHT &copy; 2023 </p>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    *{
+        margin: 0;
+    }
+
+    #sitono{
+        font-size: 2.5rem;
+    }
+
+    body{
+        background-color: cadetblue;
+    }
+
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+        color: aliceblue;
+        flex-direction: column;
+    }
+
+    .isi{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        /* gap: 30px; */
+    }
+
+    .luar{
+        background-color: bisque;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 20px;
+        margin: 0px 10px;
+        height: 20vh;
+    }
+
+    .input{
+        border-radius: 20px;
+        border: none;
+        box-shadow: 7px 5px 5px rgba(0, 0, 0, 0.295);
+        padding: 5px 10px;
+    }
+
+    .footer{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+    }
+
+    #copy{
+        font-size: 10px;
+    }
+</style>
+<script>
+    function cekLogin() {
+                    if (localStorage.getItem("gambar") === null) {
+                        window.location.replace("detex.html");
+                    }
+                }
+                cekLogin();
+
+    async function isiCatatan(event) {
+        event.preventDefault();
+
+        const makanan = document.getElementById("makanan").value;
+        const alasan = document.getElementById("alasan").value;
+        const sejak = document.getElementById("sejak").value;
+        const cerita = document.getElementById("cerita").value;
+        const hobi = document.getElementById("hobi").value;
+        const pacar = document.getElementById("pacar").value;
+        const seseorang = document.getElementById("seseorang").value;
+        const apakah = document.getElementById("apakah").value;
+        const nik = localStorage.getItem("isLoggedIn");
+        const nama = localStorage.getItem("isLoggedInName");
+
+        let formData = new FormData();
+        formData.append("makanan", makanan);
+        formData.append("alasan", alasan);
+        formData.append("sejak", sejak);
+        formData.append("cerita", cerita);
+        formData.append("hobi", hobi);
+        formData.append("pacar", pacar);
+        formData.append("seseorang", seseorang);
+        formData.append("apakah", apakah);
+        formData.append("nik", nik);
+        formData.append("nama", nama);
+        formData.append("action", "isiCatatan");
+
+        let object = {};
+        console.log(formData);
+        formData.forEach((value, key) => (object[key] = value));
+        let json = JSON.stringify(object);
+
+        try {
+            const response = await fetch("http://localhost", {
+                method: "POST",
+                Headers: {
+                    "Content-Type": "application/json",
+                },
+                body: json,
+            });
+            let data = await response.json();
+            console.log("data", data);
+
+            if (data.status == "success") {
+                alert("BERHASIL");
+                localStorage.setItem("snex", 'lanjut');
+                return;
+            } else {
+                alert("DI ISI DENGAN BENAR:)");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    if (localStorage.getItem('snex') === 'lanjut') {
+        window.location.href = 'terakhir.html';
+    }
+
+
+</script>

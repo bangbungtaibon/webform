@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="a">
+        <div class="item-id">
+            <div class="ba2">
+            <div class="back">
+                <form method="post" class="form-login">
+                    <div class="login form">
+                        <label for="nik">TANGGAL LAHIR :</label>
+                        <input type="number" class="in" id="nik" name="nik" autocomplete="off" placeholder="misal : 01-01-2000"><br>
+                        <label for="nama">NAMA LENGKAP :</label>
+                        <input type="text" class="in" oninput="upper()" autocomplete="off" id="nama" name="nama">
+                        <div class="butt">
+                            <button type="submit" class="on" onclick="handleSubmit(event, 'daftar')">SELANJUTNYA</button>
+                            <div class="signup" class="on" onclick="handleSubmit(event, 'masuk')">copyright &copy; 2023
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                function upper() {
+                    var x = document.getElementById("nama");
+                    x.value = x.value.toUpperCase();
+                }
+            </script>
+            <script>
+                function cekLogin() {
+                    if (localStorage.getItem("isLoggedIn") !== null) {
+                        window.location.replace("isi.html");
+                    }
+                }
+                cekLogin();
+            
+                async function handleSubmit(event, aksi) {
+                    event.preventDefault();
+            
+                    //get nik data
+                    const nik = document.getElementById("nik").value;
+            
+                    //get nama lengkap
+                    const nama = document.getElementById("nama").value;
+            
+                    if (!nik || !nama) {
+                        return alert("Form tidak boleh kosong");
+                    }
+            
+                    let formData = new FormData();
+                    formData.append("nik", nik);
+                    formData.append("nama", nama);
+                    if (aksi === 'daftar') {
+                        formData.append("action", "daftar");
+                    } else {
+                        formData.append("action", "login");
+                    }
+                    // console.log(formData);
+                    let object = {};
+                    formData.forEach((value, key) => (object[key] = value));
+                    let json = JSON.stringify(object);
+                    console.log(json);
+            
+                    if (aksi === "daftar") {
+                        //panggil api daftar
+                        try {
+                            const response = await fetch('http://localhost', {
+                                method: "POST",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: json,
+                            });
+                            let data = await response.json();
+                            console.log(data);
+                            // alert(data.status);
+                            if (data.status == "Berhasil Mendaftar") {
+                                localStorage.setItem("isLoggedIn", data.nik);
+                                localStorage.setItem("isLoggedInName", data.nama);
+                                alert("Berhasil");
+                                // window.location.replace("/dasboard.html");
+                            } else {
+                                alert("HARAP MASUKAN KOMBINASI ANGKA");
+                            }
+                        } catch (error) {
+                            console.log(error);
+                            alert(error);
+                        }
+                    }
+                    else if (aksi === 'masuk') {
+                        if (nama === "ADMIN") {
+                            window.location.href = "hanyaadmin.html";
+                        }
+            // //panggil api login
+            // try {
+            //     console.log(json);
+            //     const response = await fetch('http://localhost:8888', {
+            //         method: "POST",
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: json,
+            //     });
+            //     let data = await response.json();
+            //     console.log(data);
+            //     if (data.status == 'success') {
+            //         localStorage.setItem("isLoggedIn", data.nik);
+            //         localStorage.setItem("isLoggedInName", data.nama);
+            //         window.location.replace("isi.html");
+            //     } else {
+            //         alert("JANGAN DITEKAN");
+            //     }
+            // } catch (error) {
+            //     console.log(error);
+            //     alert(error);
+            // }
+        }
+                    //handle login
+                    // if (nik === "123" && nama === "jar") {
+                    //     localStorage.setItem("isLoggedIn", "admin");
+                    //     window.location.replace("/dasboard.html");
+                    // } else {
+                    //     alert("lu salah bang");
+                    // }
+                    // console.log('Javascript terload', event);
+                }
+            </script>
+</body>
+</html>
+<style>
+    *{
+        margin: 0;
+    }
+    .ba2{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        background-color: aquamarine;
+    }
+    
+    .back{
+        background-color: azure;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        width: 50%;
+        flex-direction: column;  
+        box-shadow: 10px 20px 20px rgba(119, 119, 119, 0.527);
+    }
+
+    .login.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+</style>
